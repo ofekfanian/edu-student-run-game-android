@@ -1,7 +1,7 @@
 <div align="center">
 
-  <img src="app/src/main/res/drawable/ic_guy_end.png" alt="Student Run Logo" width="120" height="120" style="border-radius: 20%; box-shadow: 0px 4px 10px rgba(0,0,0,0.25);">
-  <br/><br/>
+  <img src="app/src/main/res/drawable/ic_guy_end.png" alt="Student Run Logo" width="280">
+  <br/>
 
   # Student Run 🏃‍♂️🎓
 
