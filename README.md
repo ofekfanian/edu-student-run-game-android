@@ -13,7 +13,10 @@
 
 ## 🎥 Demo
 
-https://github.com/user-attachments/assets/b8b2dd61-9feb-4bd4-910c-45d0206d2002
+
+https://github.com/user-attachments/assets/78cf0727-a4d5-4ee7-82cf-a5a911ae75f9
+
+
 ---
 
 ## ✨ Key Features
