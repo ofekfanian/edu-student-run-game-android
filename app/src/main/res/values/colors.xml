@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="game_over_red">#D32F2F</color>
+    <color name="score_green">#2D5A27</color>
+    <color name="home_blue">#1A4A73</color>
+    <color name="black_overlay">#90000000</color>
+    <color name="card_overlay">#66000000</color>
+
+    <color name="toggle_green_bg">#C1E7B6</color>
+    <color name="toggle_blue_bg">#81C6F3</color>
+    <color name="toggle_yellow_bg">#FDE085</color>
 </resources>

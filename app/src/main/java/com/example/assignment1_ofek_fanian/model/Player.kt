@@ -1,18 +1,15 @@
 package com.example.assignment1_ofek_fanian.model
 
-class Player {
-    var lane = 1 // Start in the middle lane (index 1)
-    var lives = 3
+class Player(private val numLanes: Int) {
 
-    fun move(step: Int) {
-        lane += step
+    var lane: Int = numLanes / 2
+        private set
 
-        // Keep player inside the grid borders (0 to 2)
-        if (lane < 0) lane = 0
-        if (lane > 2) lane = 2
-    }
-
-    fun crash() {
-        lives-- // Reduce life by 1
+    // Updates player lane with boundary check
+    fun move(direction: Int) {
+        val newLane = lane + direction
+        if (newLane in 0 until numLanes) {
+            lane = newLane
+        }
     }
 }

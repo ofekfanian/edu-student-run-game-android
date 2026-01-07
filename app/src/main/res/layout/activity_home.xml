@@ -1,50 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#B3E5FC"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="@drawable/bg_home"
+    android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/caveat_brush"
-        android:text="Student Run"
-        android:textColor="#2196F3"
-        android:textSize="60sp"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/main_IMG_character"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_guy" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/main_BTN_start"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/home_LAY_scores_frame"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
-        android:paddingHorizontal="40dp"
-        android:paddingVertical="15dp"
-        android:text="Start Game"
-        android:textColor="#2196F3"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:icon="@drawable/outline_play_arrow_24"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:iconSize="32dp"
-        app:iconTint="#2196F3"
-        app:strokeColor="#2196F3"
-        app:strokeWidth="3dp" />
+        android:layout_marginStart="4dp"
+        app:cardBackgroundColor="#40000000"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="2dp">
 
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/home_BTN_scores"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/top_10_scores"
+            android:padding="12dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_trophy" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/home_LBL_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/caveat_brush"
+            android:text="@string/title_student_run"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="80sp"
+            android:textStyle="bold"
+            android:shadowColor="#BF000000"
+            android:shadowDx="6"
+            android:shadowDy="6"
+            android:shadowRadius="10" />
+
+        <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/home_BTN_start"
+            android:layout_width="220dp"
+            android:layout_height="65dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/btn_play"
+            android:textColor="#2D5A27"
+            android:textSize="28sp"
+            app:backgroundTint="#D9C1E7B6"
+            app:cornerRadius="20dp"
+            app:strokeColor="#FFFFFF"
+            app:strokeWidth="2.5dp"
+            app:icon="@drawable/ic_play"
+            app:iconSize="28dp"
+            app:iconTint="#2D5A27" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="15dp"
+            app:cardBackgroundColor="#85000000"
+            app:cardCornerRadius="25dp"
+            app:strokeColor="#FFFFFF"
+            app:strokeWidth="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/lbl_mode" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButtonToggleGroup android:id="@+id/home_TOGGLE_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" app:singleSelection="true" app:selectionRequired="true">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/home_BTN_normal"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="105dp"
+                            android:layout_height="48dp"
+                            android:text="@string/btn_norm"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            app:backgroundTint="@color/selector_toggle_green" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/home_BTN_endless"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="105dp"
+                            android:layout_height="48dp"
+                            android:text="@string/btn_endl"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            app:backgroundTint="@color/selector_toggle_green" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/lbl_difficulty" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButtonToggleGroup android:id="@+id/home_TOGGLE_diff" android:layout_width="wrap_content" android:layout_height="wrap_content" app:singleSelection="true" app:selectionRequired="true">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/home_BTN_easy"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="105dp"
+                            android:layout_height="48dp"
+                            android:text="@string/btn_easy"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            app:backgroundTint="@color/selector_toggle_blue" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/home_BTN_hard"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="105dp"
+                            android:layout_height="48dp"
+                            android:text="@string/btn_hard"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            app:backgroundTint="@color/selector_toggle_blue" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/lbl_controls" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" />
+                    <com.google.android.material.button.MaterialButtonToggleGroup android:id="@+id/home_TOGGLE_controls" android:layout_width="wrap_content" android:layout_height="wrap_content" app:singleSelection="true" app:selectionRequired="true">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/home_BTN_buttons"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="105dp"
+                            android:layout_height="48dp"
+                            android:text="@string/btn_keys"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            app:backgroundTint="@color/selector_toggle_yellow" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/home_BTN_tilt"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="105dp"
+                            android:layout_height="48dp"
+                            android:text="@string/btn_tilt"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            app:backgroundTint="@color/selector_toggle_yellow" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</RelativeLayout>

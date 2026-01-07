@@ -1,3 +1,32 @@
 <resources>
-    <string name="app_name">assignment1_Ofek_Fanian</string>
+    <string name="app_name">Student Run</string>
+
+    <string name="title_student_run">Student\nRun</string>
+    <string name="btn_play">PLAY</string>
+    <string name="lbl_mode">Mode:</string>
+
+    <string name="btn_norm">Normal</string>
+    <string name="btn_endl">Endless</string>
+
+    <string name="lbl_difficulty">Speed:</string>
+    <string name="btn_easy">Slow</string>
+    <string name="btn_hard">Fast</string>
+
+    <string name="lbl_controls">Controls:</string>
+    <string name="btn_keys">Arrows</string>
+    <string name="btn_tilt">Sensors</string>
+
+    <string name="score_label">Score</string>
+    <string name="move_left">Move Left</string>
+    <string name="move_right">Move Right</string>
+
+    <string name="game_over_title">Game\nOver</string>
+
+    <string name="final_score">Final Score: %d</string>
+
+    <string name="btn_save_score">Save Score</string>
+    <string name="btn_replay">Play Again</string>
+    <string name="btn_home">Home</string>
+
+    <string name="top_10_scores">Top 10 Scores</string>
 </resources>

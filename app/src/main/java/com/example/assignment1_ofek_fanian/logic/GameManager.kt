@@ -1,69 +1,142 @@
 package com.example.assignment1_ofek_fanian.logic
 
-import com.example.assignment1_ofek_fanian.model.GameSymbol
-import com.example.assignment1_ofek_fanian.model.Player
+import android.content.Context
+import com.example.assignment1_ofek_fanian.model.Bonus
+import com.example.assignment1_ofek_fanian.model.BonusType
+import com.example.assignment1_ofek_fanian.model.Obstacle
+import com.example.assignment1_ofek_fanian.model.ObstacleType
 import com.example.assignment1_ofek_fanian.utilities.Constants
-import kotlin.random.Random
+import com.example.assignment1_ofek_fanian.utilities.SignalManager
+import com.example.assignment1_ofek_fanian.utilities.VibrationManager
+import com.example.assignment1_ofek_fanian.R
 
-class GameManager(lifeCount: Int = Constants.Game.LIVES) {
+class GameManager(
+    private val context: Context,
+    private val numRows: Int,
+    private val numLanes: Int,
+    private val numObstacles: Int,
+    lifeCount: Int
+) {
+    private val obstacles = Array(numObstacles) {
+        Obstacle(row = -1, col = (0 until numLanes).random())
+    }
+    private val obstacleDelay = IntArray(numObstacles)
+    var currentLives: Int = lifeCount
+    val bonus = Bonus(row = -1, col = 0)
+    var score: Int = 0
+        private set
 
-    // Grid dimensions
-    val rows = Constants.Game.ROWS
-    val cols = Constants.Game.COLS
+    private var sleepBonusCount = 0
+    private var shieldEndTime: Long = 0
 
-    // Player model to manage position and lives
-    val player = Player()
+    val isGameOver: Boolean
+        get() = currentLives <= 0
 
-    // Logic Matrix: Represents the game grid (0 = Empty, 1 = Homework, 2 = Test)
-    var matrix = Array(rows) { IntArray(cols) { GameSymbol.EMPTY.value } }
-
-    var isGameOver = false
+    val isShieldActive: Boolean
+        get() = System.currentTimeMillis() < shieldEndTime
 
     init {
-        player.lives = lifeCount
+        initGame()
     }
 
-    // Move player left or right
-    fun movePlayer(step: Int) {
-        if (isGameOver) return
-        player.move(step)
+    fun initGame() {
+        score = 0
+        sleepBonusCount = 0
+        currentLives = Constants.MAX_LIVES
+
+        for (i in 0 until numObstacles) {
+            obstacles[i].row = -1
+            obstacles[i].col = (0 until numLanes).random()
+            obstacles[i].type = ObstacleType.getRandom()
+            obstacleDelay[i] = (i * 2) + 1
+        }
     }
 
-    // Main game loop logic
-    fun updateGameCycle() {
-        if (isGameOver) return
+    fun resetLives() {
+        currentLives = Constants.MAX_LIVES
+    }
 
-        // 1. Move all items down by one row
-        for (i in rows - 1 downTo 1) {
-            for (j in 0 until cols) {
-                matrix[i][j] = matrix[i - 1][j]
+    // Changed: returns 1 if health was refilled, 0 if regular bonus, -1 if no bonus
+    fun updateGameLogic(playerLane: Int): Pair<Boolean, Boolean> {
+        val hitObstacle = updateObstacles(playerLane)
+        val livesRefilled = updateBonus(playerLane)
+        score += Constants.DISTANCE_PER_TICK
+        return Pair(hitObstacle, livesRefilled)
+    }
+
+    private fun updateObstacles(playerLane: Int): Boolean {
+        var hit = false
+        for (i in 0 until numObstacles) {
+            if (obstacleDelay[i] > 0) {
+                obstacleDelay[i]--
+                continue
+            }
+
+            val obstacle = obstacles[i]
+            val reachedBottom = obstacle.moveDown(numRows)
+
+            if (reachedBottom) {
+                obstacle.reset(numLanes)
+            }
+
+            if (obstacle.row == numRows - 1 && obstacle.col == playerLane) {
+                if (!isShieldActive) hit = true
             }
         }
-
-        // 2. Clear the top row
-        for (j in 0 until cols) { matrix[0][j] = GameSymbol.EMPTY.value }
-
-        // 3. Add a new random obstacle at the top row
-        if (Random.nextInt(2) == 0) {
-            val lane = Random.nextInt(cols)
-            matrix[0][lane] = if (Random.nextBoolean()) GameSymbol.HOMEWORK.value else GameSymbol.TEST.value
-        }
+        return hit
     }
 
-    fun checkCollision(): Boolean {
-        // Check if the player hit an obstacle in the last row
-        val item = matrix[rows - 1][player.lane]
-
-        if (item != GameSymbol.EMPTY.value) {
-            player.crash() // Reduce lives
-
-            if (player.lives <= 0) isGameOver = true
-            return true // Collision detected
+    private fun updateBonus(playerLane: Int): Boolean {
+        var livesRefilled = false
+        if (!bonus.isActive) {
+            if ((0..20).random() == 0) {
+                // Modified: Only spawn heal bonus if lives < max
+                val tempBonus = Bonus(row = -1, col = 0)
+                tempBonus.spawn(numLanes)
+                if (tempBonus.type.isHeal && currentLives >= Constants.MAX_LIVES) {
+                    return false // Don't spawn ic_sleep if lives are full
+                }
+                bonus.spawn(numLanes)
+            }
+        } else {
+            val reachedBottom = bonus.moveBonus(numRows)
+            if (bonus.row == numRows - 1 && bonus.col == playerLane) {
+                livesRefilled = applyBonusEffect(bonus.type)
+                bonus.remove()
+            } else if (reachedBottom) {
+                bonus.remove()
+            }
         }
-        return false
+        return livesRefilled
     }
 
-    // Getters for UI
-    val lives: Int get() = player.lives
-    val playerIndex: Int get() = player.lane
+    private fun applyBonusEffect(type: BonusType): Boolean {
+        var refilled = false
+        score += type.scoreValue
+
+        when {
+            type.isHeal -> {
+                if (currentLives < Constants.MAX_LIVES) {
+                    currentLives++
+                    sleepBonusCount++
+                    refilled = true // Signal to play sfx_refill
+                }
+            }
+            type.isShield -> shieldEndTime = System.currentTimeMillis() + 4000
+        }
+
+        // Only play regular bonus sound if NOT refilling lives
+        if (!refilled) {
+            SignalManager.playSound(context, R.raw.sfx_bonus)
+            VibrationManager.vibrate(50)
+        }
+
+        return refilled
+    }
+
+    fun handleCrash() {
+        currentLives--
+    }
+
+    fun getObstacles() = obstacles
 }
