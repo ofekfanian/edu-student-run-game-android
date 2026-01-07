@@ -56,7 +56,6 @@ class GameManager(
         currentLives = Constants.MAX_LIVES
     }
 
-    // Changed: returns 1 if health was refilled, 0 if regular bonus, -1 if no bonus
     fun updateGameLogic(playerLane: Int): Pair<Boolean, Boolean> {
         val hitObstacle = updateObstacles(playerLane)
         val livesRefilled = updateBonus(playerLane)
@@ -89,12 +88,11 @@ class GameManager(
     private fun updateBonus(playerLane: Int): Boolean {
         var livesRefilled = false
         if (!bonus.isActive) {
-            if ((0..20).random() == 0) {
-                // Modified: Only spawn heal bonus if lives < max
+            if (sleepBonusCount < Constants.MAX_SLEEP_BONUSES && (0..20).random() == 0) {
                 val tempBonus = Bonus(row = -1, col = 0)
                 tempBonus.spawn(numLanes)
                 if (tempBonus.type.isHeal && currentLives >= Constants.MAX_LIVES) {
-                    return false // Don't spawn ic_sleep if lives are full
+                    return false
                 }
                 bonus.spawn(numLanes)
             }
@@ -119,13 +117,12 @@ class GameManager(
                 if (currentLives < Constants.MAX_LIVES) {
                     currentLives++
                     sleepBonusCount++
-                    refilled = true // Signal to play sfx_refill
+                    refilled = true
                 }
             }
             type.isShield -> shieldEndTime = System.currentTimeMillis() + 4000
         }
 
-        // Only play regular bonus sound if NOT refilling lives
         if (!refilled) {
             SignalManager.playSound(context, R.raw.sfx_bonus)
             VibrationManager.vibrate(50)

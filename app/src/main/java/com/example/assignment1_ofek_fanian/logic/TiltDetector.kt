@@ -25,7 +25,7 @@ class TiltDetector(context: Context, private val tiltCallback: TiltCallback) {
             val currentTime = System.currentTimeMillis()
 
             // Control detection frequency
-            if ((currentTime - lastUpdate) > 50) {
+            if ((currentTime - lastUpdate) > 500) {
                 if (abs(x) > Constants.TILT_THRESHOLD) {
                     lastUpdate = currentTime
                     if (x > Constants.TILT_THRESHOLD) {

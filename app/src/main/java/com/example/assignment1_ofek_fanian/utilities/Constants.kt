@@ -22,5 +22,5 @@ object Constants {
 
     // Scoring and Sensors
     const val DISTANCE_PER_TICK = 10
-    const val TILT_THRESHOLD = 2.0f
+    const val TILT_THRESHOLD = 4.0f
 }
